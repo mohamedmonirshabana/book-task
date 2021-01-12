@@ -1,7 +1,6 @@
 import { IsString, IsEmail, IsDefined, isEmail, Min, isDecimal, isDefined } from 'class-validator';
 
-
-export class CreateUserdto{
+export class UpdateUserdto{
 
     @IsString()
     @IsDefined()
@@ -14,15 +13,5 @@ export class CreateUserdto{
     @IsString()
     @IsEmail()
     email:string;
-
-    @IsString()
-    @Min(8)
-    @IsDefined()
-    password:string;
-
-    @IsString()
-    @IsDefined()
-    role:string
-
 
 }
