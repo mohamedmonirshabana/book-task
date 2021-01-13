@@ -3,12 +3,19 @@ import { UserService } from'./user.service';
 import { CreateUserdto } from './dto/createuser.dto';
 import { User } from './interface/createuser.interface';
 import { TokenUser } from './interface/token.interface';
+import { ApiBody, ApiCreatedResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('user')
 export class UserController{
     constructor(private readonly userService: UserService){}
 
     @Post('signup')
+    @ApiResponse({
+        status: 201
+    })
+    @ApiUnauthorizedResponse({description: 'user Registeration'})
+    @ApiBody({type: CreateUserdto})
     async create(@Body() userDto:CreateUserdto ){
         console.log(' UsersData ',userDto);
         const result = await this.userService.create(userDto);
@@ -17,8 +24,11 @@ export class UserController{
     }
 
     @Post('login')
-    async login(@Body('email') email:string, @Body('password') passwordPlan:string){
-        const result = await this.userService.login(email, passwordPlan);
+    @ApiResponse({description : "Login for user"})
+    @ApiUnauthorizedResponse({description: 'Invalid credentionals'})
+    @ApiBody({type: LoginDto})
+    async login(@Body('log')log : LoginDto){
+        const result = await this.userService.login(log.email, log.password);
         return result;
         
     }
