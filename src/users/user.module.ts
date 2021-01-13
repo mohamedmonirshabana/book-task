@@ -4,12 +4,14 @@ import { UserService } from './user.service';
 import { userCollection } from '../share/content';
 import { UserSchema } from './schema/user.Schema';
 import { UserController } from './user.controller';
+import { PasswordHasherService } from 'src/auth/psaaword.hasher.service';
 
 @Module({
     imports:[
-        MongooseModule.forFeature([{name:userCollection, schema:UserSchema}])
+        MongooseModule.forFeature([{name:userCollection, schema:UserSchema}]),
+        
     ],
     controllers:[ UserController ],
-    providers:[UserService]
+    providers:[UserService , PasswordHasherService]
 })
 export class UserModule {}

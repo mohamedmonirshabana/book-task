@@ -4,11 +4,9 @@ import { IsString, IsEmail, IsDefined, isEmail, Min, isDecimal, isDefined } from
 export class CreateUserdto{
 
     @IsString()
-    @IsDefined()
     firstname:string;
 
     @IsString()
-    @IsDefined()
     lastname:string;
 
     @IsString()
@@ -16,12 +14,10 @@ export class CreateUserdto{
     email:string;
 
     @IsString()
-    @Min(8)
-    @IsDefined()
     password:string;
 
     @IsString()
-    @IsDefined()
+    
     role:string
 
 

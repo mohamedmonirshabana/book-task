@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUser, User } from './interface/createuser.interface';
+import { TokenUser } from './interface/token.interface';
 // import { UserRepo } from './repo/user.repo';
 import { CreateUserdto } from './dto/createuser.dto';
 import { UpdateUserdto } from './dto/updateuser.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { userCollection } from '../share/content';
+import { userCollection, jwt_SECRET } from '../share/content';
+import { PasswordHasherService } from '../auth/psaaword.hasher.service';
+import * as jwt from 'jsonwebtoken';
+
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(userCollection)private readonly _user: Model<User>
+        @InjectModel(userCollection)private readonly _user: Model<User>,
+        
+        private hash: PasswordHasherService
         // private readonly _userRpo: UserRepo
     ){}
 
-    async create(userDto: CreateUserdto): Promise<User>{
+    async create(userDto: CreateUserdto){
+        const hsa = await this.hash.hashPassword(userDto.password);
+        console.log(hsa);
 
         const result = await this._user.create({
             ...userDto,
-            name: `${userDto.firstname} ${userDto.lastname}`
+            name: `${userDto.firstname} ${userDto.lastname}`,
+            password: hsa
         });
-        return result;
+        const token:TokenUser = {
+            email: result.email,
+            token: jwt.sign({email: result.email, role: result.role, id: result._id}, jwt_SECRET)
+        }
+
+        return token;
 
         // const result = await this._userRpo.create({
         //     ...CreateUserdto,
@@ -29,12 +43,24 @@ export class UserService {
         // return result;
     }
 
-    async login(useremail:string, password:string){
-        const result = await this._user.find({email:useremail, password: password});
-        if(result){
-            return true;
+    async login(useremail:string, password:string) :Promise<TokenUser> {
+        const result = await this._user.findOne({email:useremail});
+        if(!result){
+             throw new UnauthorizedException('Email not Exist');
         }
-        return false;
+        const valid = this.hash.comparePassword(password, result.password);
+        if(!valid){
+            throw new UnauthorizedException('Password is not correct');
+        }
+        
+        const token:TokenUser = {
+            email: result.email,
+            token: jwt.sign({email: result.email, role: result.role, id: result._id}, jwt_SECRET)
+        }
+
+        return token;
+        
+        
     }
 
     async updateUser(id:string, userdata: UpdateUserdto){
