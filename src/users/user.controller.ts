@@ -27,8 +27,10 @@ export class UserController{
     @ApiResponse({description : "Login for user"})
     @ApiUnauthorizedResponse({description: 'Invalid credentionals'})
     @ApiBody({type: LoginDto})
-    async login(@Body('log')log : LoginDto){
+    async login(@Body()log : LoginDto){
+        console.log(log);
         const result = await this.userService.login(log.email, log.password);
+        console.log(result);
         return result;
         
     }

@@ -11,10 +11,12 @@ export class BookController{
 
     @Post()
     @ApiResponse({description : "Create Book"})
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @ApiBearerAuth()
     @ApiBody({type: CreateBookDTO})
     async createBook(@Body() bookDto: CreateBookDTO): Promise<Book>{
+        console.log("Book")
+        console.log(bookDto.title);
         return await this._bookservice.createBook(bookDto);
     } 
 
