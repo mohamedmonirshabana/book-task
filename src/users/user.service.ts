@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUser, User } from './interface/createuser.interface';
 import { TokenUser } from './interface/token.interface';
-// import { UserRepo } from './repo/user.repo';
+import { UserRepo } from './repo/user.repo';
 import { CreateUserdto } from './dto/createuser.dto';
 import { UpdateUserdto } from './dto/updateuser.dto';
 import { Model } from 'mongoose';
@@ -14,17 +14,17 @@ import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectModel(userCollection)private readonly _user: Model<User>,
+        // @InjectModel(userCollection)private readonly _user: Model<User>,
         
-        private hash: PasswordHasherService
-        // private readonly _userRpo: UserRepo
+        private hash: PasswordHasherService,
+        private readonly _userRpo: UserRepo
     ){}
 
     async create(userDto: CreateUserdto){
         const hsa = await this.hash.hashPassword(userDto.password);
         console.log(hsa);
 
-        const result = await this._user.create({
+        const result = await this._userRpo.create({
             ...userDto,
             name: `${userDto.firstname} ${userDto.lastname}`,
             password: hsa
@@ -44,7 +44,7 @@ export class UserService {
     }
 
     async login(useremail:string, password:string) :Promise<TokenUser> {
-        const result = await this._user.findOne({email:useremail});
+        const result = await this._userRpo.findOne({email:useremail});
         if(!result){
              throw new UnauthorizedException('Email not Exist');
         }
@@ -63,13 +63,13 @@ export class UserService {
         
     }
 
-    async updateUser(id:string, userdata: UpdateUserdto){
-        const result = await this._user.findByIdAndUpdate(id, userdata);
-        return result;
-    }
+    // async updateUser(id:string, userdata: UpdateUserdto){
+    //     const result = await this._userRpo.update( userdata);
+    //     return result;
+    // }
 
     async updatePassword(id:string, oldPassword:string, newPassword:string){
-        const userData = await this._user.findById(id);
+        const userData = await this._userRpo.findById(id);
 
         if(userData.password == oldPassword){
             userData.password = newPassword;

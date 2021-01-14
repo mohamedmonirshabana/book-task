@@ -5,6 +5,7 @@ import { userCollection } from '../share/content';
 import { UserSchema } from './schema/user.Schema';
 import { UserController } from './user.controller';
 import { PasswordHasherService } from 'src/auth/psaaword.hasher.service';
+import { UserRepo } from './repo/user.repo';
 
 @Module({
     imports:[
@@ -12,6 +13,6 @@ import { PasswordHasherService } from 'src/auth/psaaword.hasher.service';
         
     ],
     controllers:[ UserController ],
-    providers:[UserService , PasswordHasherService]
+    providers:[UserService , PasswordHasherService, UserRepo]
 })
 export class UserModule {}
