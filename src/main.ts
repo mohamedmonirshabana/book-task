@@ -8,10 +8,11 @@ async function bootstrap() {
   .setTitle('Book-Task API')
   .setDescription('Test for Rest API ')
   .setVersion("1.0.0")
-  .addBearerAuth(
-    {type:'http', scheme:'bearer', bearerFormat:'Token'},
-    'access-token'
-    )
+  // .addBearerAuth(
+  //   {type:'http', scheme:'bearer', bearerFormat:'Token', in:'header'},
+  //   'access-token'
+  //   )
+  .addBearerAuth()
   .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('doc', app, document);

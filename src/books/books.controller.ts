@@ -3,7 +3,7 @@ import { BookService } from './books.service';
 import { Book } from './interface/book.interface';
 import { CreateBookDTO } from './dto/book.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiHeader, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 @Controller('books')
 export class BookController{
@@ -11,8 +11,8 @@ export class BookController{
 
     @Post()
     @ApiResponse({description : "Create Book"})
-    // @UseGuards(AuthGuard)
-    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    @ApiBearerAuth('JWT')
     @ApiBody({type: CreateBookDTO})
     async createBook(@Body() bookDto: CreateBookDTO): Promise<Book>{
         console.log("Book")
