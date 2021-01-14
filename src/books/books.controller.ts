@@ -17,7 +17,7 @@ export class BookController{
     async createBook(@Body() bookDto: CreateBookDTO): Promise<Book>{
         console.log("Book")
         console.log(bookDto.title);
-        return await this._bookservice.createBook(bookDto);
+        return await this._bookservice.create(bookDto);
     } 
 
     @Get(':id')
@@ -26,7 +26,7 @@ export class BookController{
     })
     @ApiResponse({description : "Get Book by ID"})
     async getBookbyId(@Param('id') id: string ): Promise<Book>{
-        return await this._bookservice.findeOneBook(id);
+        return await this._bookservice.findeById(id);
     }
 
     @Get('bytitle/:title')
