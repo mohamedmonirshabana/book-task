@@ -3,8 +3,6 @@ export interface IBaseRepo<T>{
     model:any;
     create(data:any):Promise<T>;
 
-    insert(data:any):Promise<T>;
-
     update(data:any):Promise<T>;
 
     // delete(data):Promise<T>;

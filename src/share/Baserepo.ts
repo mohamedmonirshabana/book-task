@@ -1,39 +1,44 @@
-// import { Injectable } from '@nestjs/common';
-// import { Document, Model, FilterQuery } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { Document, Model } from 'mongoose';
+import { IBaseRepo } from './base.repo.interface';
 
-// @Injectable()
-// export abstract class BaseRepo<T>{
-//     constructor(private _model: Model<T & Document>){}
+@Injectable()
+export abstract class BaseRepo<T> implements IBaseRepo<T> {
+    constructor(private _model: Model<T & Document>){}
+    get model(){
+        return this._model;
+    }
 
-//     get model(){
-//         return this._model;
-//     }
+    
+    public async update(data: Partial<T> | any): Promise<T> {
+        const documentData= await this._model.updateOne(data);
+        return documentData;
+    }
+   
+    public async find(query: Partial<T> | any= {}): Promise<T[]> {
+        const findResult = await this._model.find(query);
+        return findResult;
+    }
+    public async findByIdAndDelete(id: string): Promise<T> {
+        const dataDelete = await this._model.findByIdAndRemove(id);
+        return dataDelete;     
+    }
 
-//     async create(data: T | any): Promise<T>{
-//         const result = await this._model.create(data);
-//         return result;
-//     }
+    public async findById(id: string):Promise<T>{
+        const resultData = await this._model.findById(id);
+        return resultData;
+    }
 
-//     async update(id:string, data: T): Promise<T>{
-//         const result = await this._model.findByIdAndUpdate(id, data);
-//         return result;
-//     }
 
-//     async delete(id:string): Promise<T>{
-//         return await this._model.findByIdAndDelete(id);
-//     }
+    public async create(data: T | any): Promise<T>{
+        const result = await this._model.create(data);
+        return result;
+    }
 
-//     async findById(id:string): Promise<T>{
-//         return await this._model.findById(id);
-//     }
 
-//     async findOne(
-//         property:Partial<Record<keyof T, unknown>>, 
-//         value:string | Record<string, unknown> = {},
-//         optional: Record<string, unknown>= {}
-//         ):Promise<T>{
+    public async findOne(query:Partial<T> | any={}):Promise<T>{
+        const result = await this._model.findOne(query);
+        return result;
+    }
 
-//         return await this._model.findOne( property as FilterQuery<T>, value, optional );
-//     }
-
-// }
+}
