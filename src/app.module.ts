@@ -7,15 +7,18 @@ import { UserModule } from './users/user.module';
 import { BookModule } from './books/book.module';
 import { GetUserMiddleware } from './Middleware/getuser.Middleware';
 import { BookController } from './books/books.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModel } from './auth/auth.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(`mongodb://localhost/${dataBaseName}`),
     UserModule,
-    BookModule
+    BookModule,
+    AuthModel
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,],
 })
 export class AppModule implements NestMiddleware {
   use(req: any, res: any, next: () => void) {

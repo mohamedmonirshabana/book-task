@@ -6,7 +6,7 @@ import { TokenUser } from './interface/token.interface';
 import { ApiBody, ApiCreatedResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 
-@Controller('auth')
+@Controller('user')
 export class UserController{
     constructor(private readonly userService: UserService){}
 

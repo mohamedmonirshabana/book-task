@@ -78,7 +78,17 @@ export class UserService {
         
     }
 
+
+
+
     // async findEmail(usermail:string): Promise<Boolean>{
     //     const result = await this._userRpo.findOne(email, usermail);
     // }
+
+
+    async findByPayload(payload: any){
+        const {email} = payload;
+        return await this._userRpo.findOne({email: email});
+        
+    }
 }
