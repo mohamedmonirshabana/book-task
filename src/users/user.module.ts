@@ -13,7 +13,7 @@ import { UserRepo } from './repo/user.repo';
         
     ],
     controllers:[ UserController ],
-    providers:[UserService , PasswordHasherService, UserRepo],
-    exports:[PasswordHasherService]
+    providers:[UserService , PasswordHasherService, UserRepo,UserService],
+    exports:[PasswordHasherService, UserRepo,UserService,PasswordHasherService]
 })
 export class UserModule {}

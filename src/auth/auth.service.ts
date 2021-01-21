@@ -3,13 +3,15 @@ import { sign } from 'jsonwebtoken';
 import { UserService } from '../users/user.service';
 import {jwt_SECRET} from '../share/content';
 import { PasswordHasherService } from './psaaword.hasher.service';
+import { UserRepo } from '../users/repo/user.repo';
 
 @Injectable()
 export class AuthService {
     constructor(
-        @Inject()   
-        private _userService: UserService){
-    }
+        private readonly _userService: UserService,
+        private readonly _passwordHash: PasswordHasherService,
+        private readonly _repo: UserRepo
+        ){}
 
 
     public async signPayload(payload: any){
